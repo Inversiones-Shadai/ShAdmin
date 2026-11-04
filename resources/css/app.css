@@ -1,0 +1,261 @@
+@import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+@import './auth.css';
+@import './lobby.css';
+@import './farma-tables.css';
+
+.product-table-container {
+    container: product-list / inline-size;
+}
+
+.product-table-container [data-flux-table] {
+    min-width: 0;
+    white-space: normal;
+}
+
+.product-table-container [data-flux-cell] {
+    overflow-wrap: anywhere;
+}
+
+/* Flux tables default to nowrap; catalog names must stay inside their columns. */
+.product-catalog-table-container [data-flux-table],
+.product-catalog-table-container [data-flux-cell],
+.product-catalog-table-container [data-flux-column] {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+@container product-list (max-width: 72rem) {
+    .product-table-container ui-table-scroll-area {
+        overflow: visible;
+    }
+
+    .product-table-container [data-flux-table],
+    .product-table-container [data-flux-table] tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .product-table-container [data-flux-table] thead {
+        display: none;
+    }
+
+    .product-table-container [data-flux-row] {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        padding: 0.75rem;
+        border: 1px solid var(--color-slate-200);
+        border-radius: 0.75rem;
+    }
+
+    .dark .product-table-container [data-flux-row] {
+        border-color: var(--color-slate-700);
+    }
+
+    .product-table-container [data-flux-cell] {
+        display: block;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        padding: 0.5rem;
+        text-align: left;
+    }
+
+    .product-table-container [data-flux-cell]::before {
+        display: block;
+        margin-bottom: 0.25rem;
+        color: var(--color-slate-500);
+        content: attr(data-label);
+        font-size: 0.6875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .product-table-container [data-flux-cell]:nth-child(2),
+    .product-table-container [data-flux-cell]:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .product-table-container [data-flux-cell]:last-child > div {
+        justify-content: flex-start;
+    }
+}
+
+.swal2-container {
+    z-index: 2147483647 !important;
+}
+
+[data-flux-modal] > dialog[open] > .swal2-container {
+    z-index: 2147483647 !important;
+}
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f5f5f5;
+    --color-zinc-200: #e5e5e5;
+    --color-zinc-300: #d4d4d4;
+    --color-zinc-400: #a3a3a3;
+    --color-zinc-500: #737373;
+    --color-zinc-600: #525252;
+    --color-zinc-700: #404040;
+    --color-zinc-800: #262626;
+    --color-zinc-900: #171717;
+    --color-zinc-950: #0a0a0a;
+
+    --color-accent: var(--color-neutral-800);
+    --color-accent-content: var(--color-neutral-800);
+    --color-accent-foreground: var(--color-white);
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-white);
+        --color-accent-content: var(--color-white);
+        --color-accent-foreground: var(--color-neutral-800);
+    }
+}
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+/* Native Windows option menus need their own opaque theme colors. */
+select[data-flux-select-native] {
+    color-scheme: light;
+}
+
+.dark select[data-flux-select-native] {
+    color-scheme: dark;
+}
+
+select[data-flux-select-native] :is(option, optgroup) {
+    background-color: var(--color-white);
+    color: var(--color-slate-800);
+}
+
+.dark select[data-flux-select-native] :is(option, optgroup) {
+    background-color: var(--color-slate-800);
+    color: var(--color-slate-100);
+}
+
+.permission-menu-panel {
+    position: relative;
+}
+
+.permission-menu-panel::before {
+    position: absolute;
+    inset-block: 0.1875rem;
+    inset-inline-start: 0;
+    width: 1px;
+    background: var(--color-slate-200);
+    content: '';
+}
+
+.dark .permission-menu-panel::before {
+    background: var(--color-slate-700);
+}
+
+.permission-menu-chevron {
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports (interpolate-size: allow-keywords) and selector(details::details-content) {
+        :root {
+            interpolate-size: allow-keywords;
+        }
+
+        :is(.permission-menu-accordion, .permission-submenu-accordion)::details-content {
+            block-size: 0;
+            opacity: 0;
+            overflow: clip;
+            transition:
+                block-size 260ms cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
+                content-visibility 260ms;
+            transition-behavior: allow-discrete;
+        }
+
+        :is(.permission-menu-accordion, .permission-submenu-accordion)[open]::details-content {
+            block-size: auto;
+            opacity: 1;
+        }
+
+        :is(.permission-menu-mobile-group, .permission-submenu-mobile-group) > div {
+            display: block;
+            block-size: 0;
+            opacity: 0;
+            overflow: clip;
+            visibility: hidden;
+            transition:
+                block-size 260ms cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s linear 260ms;
+        }
+
+        :is(.permission-menu-mobile-group, .permission-submenu-mobile-group) > div[data-open] {
+            block-size: auto;
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+    }
+
+    @supports not ((interpolate-size: allow-keywords) and selector(details::details-content)) {
+        :is(.permission-menu-accordion, .permission-submenu-accordion)[open] > .permission-menu-panel {
+            animation: permission-menu-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        :is(.permission-menu-mobile-group, .permission-submenu-mobile-group) > div[data-open] {
+            animation: permission-menu-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+    }
+}
+
+@keyframes permission-menu-enter {
+    from {
+        opacity: 0;
+        transform: translateY(-0.35rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* \[:where(&)\]:size-4 {
+    @apply size-4;
+} */

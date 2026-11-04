@@ -1,0 +1,74 @@
+/* Keep the view controls outside the scrolling rows throughout Farma. */
+.farma-screen {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+    min-height: 0;
+}
+
+/* Closed dialogs must not create empty flex items and gaps below the table. */
+.farma-screen [data-flux-modal],
+.farma-screen [data-test="advanced-product-search"] {
+    display: contents;
+}
+
+.farma-screen > *,
+.farma-table-panel > * {
+    flex-shrink: 0;
+}
+
+.farma-screen .farma-table-panel {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.farma-table-scroll {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.farma-table-scroll.overflow-x-hidden {
+    overflow-x: hidden;
+}
+
+/* Flux adds a second scroll area; the marked wrapper owns both axes. */
+.farma-table-scroll ui-table-scroll-area {
+    overflow: visible;
+}
+
+.farma-table-scroll thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--color-white);
+}
+
+.dark .farma-table-scroll thead {
+    background-color: var(--color-slate-900);
+}
+
+.farma-table-scroll thead th {
+    background-color: inherit;
+}
+
+/* Multi-section reports keep their title fixed and every section reachable. */
+.farma-screen-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.farma-screen-body .farma-table-scroll,
+.farma-screen [data-flux-modal] .farma-table-scroll {
+    max-height: 60dvh;
+}

@@ -1,0 +1,2107 @@
+[
+  {
+    "methods": ["GET", "HEAD"],
+    "uri": "api/farma/reporte-costeo/consultar"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/producto/crear-hijo/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/auth/session/login"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/auth/session/logout"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/auth/worklunch/lunch"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/auth/worklunch/today"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/auth/worklunch/work"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/apputils/check"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/config/device/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/device/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/device/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/device/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/device/estados"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/device/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/device/stocks"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/horas-lab/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/horas-lab/find/{userId}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/horas-lab/save"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/config/modulo/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/modulo/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/modulo/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/modulo/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/modulo/estados"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/modulo/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/moduloestado/all"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/moduloestado/create"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/moduloestado/find/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/permisos/crearpermiso"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/permisos/eliminarpermiso/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/permisos/listarAcciones/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/permisos/listarVistas/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/permisos/listarmodulos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/permisos/listarpermisos/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/permisos/tipoTiempo"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/config/stock/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/stock/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/stock/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/stock/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/stock/estados"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/stock/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/config/stockestado/actualizar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/stockestado/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/stockestado/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/stockestado/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/stockestado/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/config/user/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/user/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/user/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/user/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/user/estados"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/user/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/user/roles"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/vista/acciones/{id}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/config/vista/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/vista/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/vista/crear"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/vista/createaction"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/vista/deleteaction/{id}"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/vista/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/vista/estados"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/vista/findbymodule/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/vista/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/vista/listarModulos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/vistaestado/all"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/vistaestado/create"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/vistaestado/find/{id}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/compras/actualizar"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/compras/borrador"
+  },
+  {
+    "methods": [
+      "PATCH"
+    ],
+    "uri": "api/farma/compras/borrador/{id}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/compras/borrador/{purchase}/detalle"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/compras/borrador/{purchase}/detalle/{detail}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/buscar/{id}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/compras/catalogos/{catalogoCompra}/actualizar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/catalogos/{catalogoCompra}/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/compras/catalogos/{catalogoCompra}/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/compras/catalogos/{catalogoCompra}/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/catalogos/{catalogoCompra}/listar"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/compras/crear"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/documento/{id}"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/compras/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/compras/finalizar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/compras/kardex/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/opciones"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/proveedor-imagen/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/proveedores"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/reporte/{id}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/compras/transacciones/actualizar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/transacciones/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/compras/transacciones/crear"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/transacciones/documento/{id}"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/compras/transacciones/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/transacciones/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/transacciones/opciones"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/compras/ultimos-costos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/distribucion/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/distribucion/lote/{lot}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/distribucion/producto/{product}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/laboratorios/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/laboratorios/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/laboratorios/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/laboratorios/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/laboratorios/imagen/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/laboratorios/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/lotes/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/lotes/producto/{product}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/productos/administraciones/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/administraciones/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/administraciones/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/administraciones/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/administraciones/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/productos/categorias/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/categorias/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/categorias/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/categorias/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/categorias/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/productos/estados/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/estados/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/estados/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/estados/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/estados/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/familias/administraciones"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/familias/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/familias/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/familias/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/familias/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/familias/presentaciones"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/productos/familias/update/{id}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/productos/presentaciones/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/presentaciones/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/presentaciones/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/presentaciones/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/presentaciones/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/principios-activos/buscar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/principios-activos/concentraciones"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/principios-activos/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/principios-activos/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/principios-activos/filter_concentraciones"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/principios-activos/filter_principios_activos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/principios-activos/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/productos/principios-activos/update/{id}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/productos/producto/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/buscar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/categorias"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/producto/crear"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/producto/crear_principios_activos/{id}"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/producto/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/estados"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/familias"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/filter_familias"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/filter_laboratorios"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/filter_principios_activos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/filter_productos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/filter_unidades"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/imagen/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/laboratorios"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/padres"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/principios_activos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/principios_activos/{id}"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/producto/remove_principios_activos/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/producto/unidades"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/productos/activos/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/productos/activos/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/productos/activos/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/productos/activos/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/productos/productos/activos/update/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/productos/catalogos/concentraciones/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/productos/catalogos/concentraciones/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/productos/catalogos/concentraciones/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/productos/catalogos/concentraciones/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/productos/productos/catalogos/concentraciones/update/{id}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/productos/unidades/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/unidades/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/productos/unidades/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/productos/unidades/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/productos/unidades/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/proveedores/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/proveedores/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/proveedores/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/proveedores/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/proveedores/imagen/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/proveedores/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/reglas-proveedores/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/reglas-proveedores/{provider}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/reglas-proveedores/{provider}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/reporte-compras/exportar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/reporte-compras/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/reporte-compras/pagos/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/reporte-compras/proveedores"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/stocks/matriz-inventario/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/stocks/matriz-inventario/stocks"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/tareas/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/tareas/cancelar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/tareas/crear"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/tareas/listar"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/tareas/modificar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/tareas/opciones"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/transferencias/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/transferencias/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/transferencias/enviar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/transferencias/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/transferencias/lotes"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/transferencias/conversion/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/transferencias/convertir"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/transferencias/opciones"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/transferencias/recibir/{id}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/farma/transferencias/tipos/actualizar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/transferencias/tipos/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/transferencias/tipos/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/farma/transferencias/tipos/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/transferencias/tipos/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/vencimientos/producto/{product}/lotes"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/farma/vencimientos/productos"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/farma/vencimientos/verificar"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/headquarters/pos/asistencia/{action}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/headquarters/pos/compras/{action}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/headquarters/pos/inventario/control/guardar"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/headquarters/pos/inventario/matriz/guardar"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/headquarters/pos/productos/lotes-hijos/{action}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/headquarters/pos/tareas/{action}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/headquarters/pos/transferencias/{action}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/headquarters/registro/confirmar"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/headquarters/registro/solicitar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/pos/catalogos/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/catalogos/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/pos/catalogos/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/pos/catalogos/desactivar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/catalogos/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/pos/clientepos/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/clientepos/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/pos/clientepos/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/pos/clientepos/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/clientepos/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/compras/buscar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/compras/filtrar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/compras/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/compras/opciones/{kind}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/pos/descuentos/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/descuentos/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/pos/descuentos/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/pos/descuentos/desactivar/{id}"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/pos/descuentos/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/descuentos/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/descuentos/opciones"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/pos/permisos/crearpermiso"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/pos/permisos/eliminarpermiso/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/permisos/listarAcciones/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/permisos/listarVistas/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/permisos/listarmodulos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/permisos/listarpermisos/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/permisos/spermisos/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/permisos/tipoTiempo"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/pos/roles/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/roles/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/pos/roles/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/pos/roles/desactivar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/roles/listar"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/pos/usuarios/actualizar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/usuarios/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/pos/usuarios/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/pos/usuarios/desactivar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/pos/usuarios/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/sorteos/filter"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/sorteos/filter_clientes"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/sorteos/filter_sorteos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/sorteos/filter_stocks"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/sorteos/filter_usuarios"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/sorteos/list_clientes"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/sorteos/list_sorteos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/sorteos/list_stocks"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/sorteos/list_usuarios"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/worklunch/filter"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/worklunch/horasLab/{userId}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/reportes/worklunch/listUsuarios"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/clientes/all"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/sorteos/clientes/create"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/sorteos/clientes/delete/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/clientes/filter"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/clientes/find/{id}"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/sorteos/clientes/update"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/sorteos/sorteo/actualizar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/sorteo/buscar/{id}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/sorteos/sorteo/crear"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/sorteos/sorteo/eliminar/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/sorteo/estados"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/sorteo/filter"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/sorteo/listar"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/ticket/activephone/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/ticket/all"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/ticket/buscarcliente"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/ticket/clientes"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/sorteos/ticket/creacliente"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/sorteos/ticket/create"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/ticket/departamentos"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/ticket/municipios/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/sorteos/ticket/sorteoactual"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/sorteos/ticket/updatephone"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/utils/bible/random"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/licenses"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/licenses"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/config/licenses/{id}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/licenses/{id}"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/licenses/{id}"
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "uri": "api/config/licenses/{id}/devices/{activation}"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/config/licenses/customers"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/licenses/customers"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/config/licenses/customers/{customer}"
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "uri": "api/config/desktop-releases"
+  },
+  {
+    "methods": [
+      "HEAD"
+    ],
+    "uri": "api/config/desktop-releases"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/desktop-releases"
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "uri": "api/config/desktop-releases/artifacts"
+  },
+  {
+    "methods": [
+      "HEAD"
+    ],
+    "uri": "api/config/desktop-releases/artifacts"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/config/desktop-releases/{id}"
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "uri": "api/config/desktop-releases/{id}/events"
+  },
+  {
+    "methods": [
+      "HEAD"
+    ],
+    "uri": "api/config/desktop-releases/{id}/events"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/desktop-releases/{id}/pilot"
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "uri": "api/config/desktop-releases/{id}/pilots"
+  },
+  {
+    "methods": [
+      "HEAD"
+    ],
+    "uri": "api/config/desktop-releases/{id}/pilots"
+  },
+  {
+    "methods": [
+      "PUT"
+    ],
+    "uri": "api/config/desktop-releases/{id}/pilots"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/desktop-releases/{id}/stable"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/desktop-releases/{id}/withdraw"
+  },
+  {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "uri": "api/selectors/{source}"
+  }
+]

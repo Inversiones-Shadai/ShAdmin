@@ -1,0 +1,1 @@
+<x-layouts::app title="Catálogos de operación POS"><livewire:pos.catalogos /></x-layouts::app>

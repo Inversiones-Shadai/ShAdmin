@@ -1,0 +1,66 @@
+# Dependencies and generated assets
+/node_modules
+/public/build
+/public/fonts-manifest.dev.json
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+/nativephp
+.vite/
+
+# Build and publish output, including nested tools and subprojects
+[Bb]in/
+[Oo]bj/
+[Bb]uild/
+[Dd]ist/
+[Oo]ut/
+[Pp]ublish/
+artifacts/
+AppPackages/
+BundleArtifacts/
+Generated Files/
+
+# Local environment and credentials (keep shareable templates)
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.template
+!.env.*.template
+/auth.json
+*.pfx
+*.p12
+
+# Test and analysis caches
+/.phpunit.cache
+/.phpstan.cache
+/phpstan-cache/
+.phpactor.json
+.phpunit.result.cache
+/coverage/
+
+# Local tools and editor settings
+Homestead.json
+Homestead.yaml
+/.fleet
+/.codex/
+/.idea
+/.nova
+/.vscode
+/.zed
+
+# Temporary files, logs and operating system metadata
+/artifacts/
+/tmp/
+/temp/
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini

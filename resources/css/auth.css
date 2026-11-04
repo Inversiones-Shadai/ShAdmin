@@ -1,0 +1,70 @@
+.pharmacy-login { color-scheme: light; background: #f1f4f2; color: #213c35; }
+.pharmacy-login-page { width: min(100%, 1200px); min-height: 100svh; margin-inline: auto; padding: 42px 48px 28px; display: flex; flex-direction: column; justify-content: center; }
+.pharmacy-login-masthead, .pharmacy-login-page-footer { display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 12px; color: #64776f; }
+.pharmacy-login-masthead { margin-bottom: 22px; }
+.pharmacy-login-product { color: #243e35; font-size: 17px; font-weight: 650; letter-spacing: -.5px; }
+.pharmacy-login-product > span { color: #b6343b; margin-right: 6px; font-size: 23px; font-weight: 500; }
+.pharmacy-login-shell { display: grid; grid-template-columns: .94fr 1.06fr; min-height: 650px; overflow: hidden; border: 1px solid #dde5df; border-radius: 24px; background: #fff; box-shadow: 0 24px 70px -30px #183e352c, 0 4px 16px -8px #183e3510; }
+.pharmacy-login-brand { position: relative; display: flex; flex-direction: column; align-items: flex-start; overflow: hidden; padding: 46px 44px 38px; background: linear-gradient(145deg, #173f36, #102f2b); color: #fff; }
+.pharmacy-login-logo { position: relative; z-index: 1; display: block; width: 232px; max-width: 100%; padding: 12px 14px; border-radius: 10px; background: #fff; }
+.pharmacy-login-logo img { display: block; width: 100%; height: auto; }
+.pharmacy-login-intro { position: relative; z-index: 1; margin-top: 66px; }
+.pharmacy-login-eyebrow { margin-bottom: 20px; font-size: 10px; font-weight: 600; letter-spacing: 2px; color: #b2ccc1; }
+.pharmacy-login-intro h2 { font-size: clamp(34px, 3.5vw, 46px); font-weight: 500; line-height: 1.16; letter-spacing: -1.8px; }
+.pharmacy-login-intro h2 span { color: #b9d9c8; }
+.pharmacy-login-description { max-width: 295px; margin-top: 24px; font-size: 14px; line-height: 1.8; color: #c0d1c8; }
+.pharmacy-login-art { position: absolute; width: 460px; max-width: none; right: -80px; bottom: -45px; color: #b9d9c8; pointer-events: none; }
+.pharmacy-login-brand-footer { position: relative; z-index: 1; margin-top: auto; padding-top: 70px; }
+.pharmacy-login-rule { display: block; width: 32px; height: 2px; margin-bottom: 20px; background: #ba6b65; }
+.pharmacy-login-brand-footer p { display: flex; gap: 10px; font-size: 12px; font-weight: 500; color: #d8e6de; }
+.pharmacy-login-brand-footer > span:last-child { display: block; margin-top: 8px; font-size: 11px; color: #a4bfb3; }
+.pharmacy-login-access { display: flex; align-items: center; justify-content: center; padding: 48px 52px; }
+.pharmacy-login-form-container { width: 100%; max-width: 370px; }
+.pharmacy-login-access-label { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 10px; font-weight: 600; letter-spacing: 1.6px; color: #65796e; }
+.pharmacy-login-access-label > span { width: 6px; height: 6px; border-radius: 50%; background: #b6343b; }
+.pharmacy-login-access h1 { font-size: 29px; font-weight: 600; letter-spacing: -1px; line-height: 1.25; color: #1b352e; }
+.pharmacy-login-form-description { margin-top: 12px; font-size: 14px; line-height: 1.7; color: #6a7b73; }
+.pharmacy-login-form { display: grid; gap: 24px; margin-top: 34px; }
+.pharmacy-login-form [data-flux-label] { color: #334b40; font-size: 13px; font-weight: 600; }
+.pharmacy-login-form input[data-flux-control] { height: 50px; border-radius: 9px; border: 1px solid #d9e2dc; background: #fbfcfb; color: #243e35; box-shadow: none; font-size: 14px; transition: border-color 150ms, box-shadow 150ms; }
+.pharmacy-login-form input[data-flux-control]::placeholder { color: #85938b; }
+.pharmacy-login-form input[data-flux-control]:focus { border-color: #477c65; outline: 3px solid #477c6520; outline-offset: 1px; --tw-ring-shadow: 0 0 #0000; --tw-ring-offset-shadow: 0 0 #0000; }
+.pharmacy-login-form input[data-invalid] { border-color: #c43f46; }
+.pharmacy-login-form [data-flux-input] > div, .pharmacy-login-form [data-flux-input] button { color: #7c9185; }
+.pharmacy-login-submit { display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; min-height: 50px; margin-top: 4px; border: 1px solid #1f4b3d; border-radius: 9px; background: #1f4b3d; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px #1f4b3d12; transition: background 150ms, box-shadow 150ms; }
+.pharmacy-login-submit svg { width: 18px; height: 18px; }
+.pharmacy-login-submit:hover { background: #173c30; box-shadow: 0 5px 16px #1f4b3d25; }
+.pharmacy-login-submit:disabled { opacity: .65; cursor: wait; }
+.pharmacy-login a:focus-visible, .pharmacy-login button:focus-visible { outline: 3px solid #729886; outline-offset: 4px; }
+.pharmacy-login-help { margin-top: 26px; text-align: center; font-size: 12px; line-height: 1.9; }
+.pharmacy-login-help p { color: #50695a; font-weight: 500; }
+.pharmacy-login-help span { color: #79867e; }
+.pharmacy-login-privacy { display: flex; align-items: center; justify-content: center; gap: 7px; padding-top: 25px; margin-top: 28px; border-top: 1px solid #edf0ed; font-size: 10px; color: #75877b; }
+.pharmacy-login-privacy svg { width: 15px; height: 15px; flex-shrink: 0; }
+.pharmacy-login-page-footer { margin-top: 22px; font-size: 11px; }
+
+@media (max-width: 900px) {
+    .pharmacy-login-page { padding: 30px 28px 24px; }
+    .pharmacy-login-brand { padding: 38px 30px; }
+    .pharmacy-login-access { padding: 42px 32px; }
+    .pharmacy-login-intro h2 { font-size: 36px; }
+    .pharmacy-login-brand-footer p { gap: 6px; font-size: 11px; }
+}
+
+@media (max-width: 680px) {
+    .pharmacy-login-page { max-width: 480px; padding: 22px 18px; }
+    .pharmacy-login-masthead { margin-bottom: 16px; }
+    .pharmacy-login-shell { grid-template-columns: 1fr; min-height: auto; border-radius: 18px; }
+    .pharmacy-login-brand { align-items: center; padding: 24px; }
+    .pharmacy-login-logo { width: 205px; padding: 9px 12px; }
+    .pharmacy-login-intro, .pharmacy-login-brand-footer, .pharmacy-login-art { display: none; }
+    .pharmacy-login-access { padding: 32px 26px; }
+    .pharmacy-login-access h1 { font-size: 26px; }
+    .pharmacy-login-access-label { margin-bottom: 16px; }
+    .pharmacy-login-form { margin-top: 28px; }
+    .pharmacy-login-page-footer { flex-direction: column; gap: 5px; margin-top: 18px; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pharmacy-login-form input[data-flux-control], .pharmacy-login-submit { transition: none; }
+}
