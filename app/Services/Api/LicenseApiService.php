@@ -42,6 +42,15 @@ class LicenseApiService
         return (array) $this->send('POST', '', $payload, 'licbtn02')->data;
     }
 
+    /**
+     * @param  array<string, mixed>  $payload
+     * @return array<string, mixed>
+     */
+    public function requestGenerationCode(array $payload): array
+    {
+        return (array) $this->send('POST', '/generation-code', $payload, 'licbtn02')->data;
+    }
+
     /** @param array<string, mixed> $payload */
     public function update(string $id, array $payload): void
     {
@@ -62,6 +71,19 @@ class LicenseApiService
     public function delete(string $id): string
     {
         return $this->send('DELETE', '/'.$id, [], 'licbtn06')->message;
+    }
+
+    /** @return array<string, mixed> */
+    public function requestKeyCode(string $id): array
+    {
+        return (array) $this->send('POST', '/'.$id.'/key-code', [], 'licbtn04')->data;
+    }
+
+    public function revealKey(string $id, string $challengeId, string $code): string
+    {
+        $data = (array) $this->send('POST', '/'.$id.'/reveal-key', ['challenge_id' => $challengeId, 'code' => $code], 'licbtn04')->data;
+
+        return (string) ($data['license_key'] ?? '');
     }
 
     /** @param array<string, mixed> $payload */

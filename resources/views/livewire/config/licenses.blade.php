@@ -10,7 +10,8 @@
     @if ($message)<flux:callout><flux:callout.text>{{ $message }}</flux:callout.text></flux:callout>@endif
     @if ($generatedKey)
         <div class="rounded-xl border border-green-400 bg-green-50 p-5 dark:bg-green-950">
-            <flux:heading>Clave generada · se muestra una sola vez</flux:heading>
+            <flux:heading>Clave generada</flux:heading>
+            <flux:text>Para volver a consultarla se requiere un código enviado al correo administrador.</flux:text>
             <p class="my-3 break-all font-mono select-all">{{ $generatedKey }}</p>
             <flux:button wire:click="$set('generatedKey', '')">Ya guardé la clave</flux:button>
         </div>
@@ -58,7 +59,15 @@
             <tr wire:key="license-{{ $license['id'] }}" class="border-b border-zinc-100 dark:border-zinc-800">
                 <td class="max-w-64 break-words px-4 py-3">{{ $license['label'] }}</td><td class="px-4 py-3">{{ ['hq-client' => 'HQ-Client', 'shpos' => 'ShPOS', 'shpos-administrator' => 'ShPOS-Administrator'][$license['product']] ?? $license['product'] }}</td>
                 <td class="px-4 py-3">{{ match ((int) ($license['term_months'] ?? 0)) { 1 => '1 mes', 6 => '6 meses', 12 => '1 año', default => 'Anterior' } }}</td>
-                <td class="px-4 py-3 font-mono">…{{ $license['key_suffix'] }}</td><td class="px-4 py-3">{{ $license['used_seats'] }} / {{ $license['seats'] }}</td>
+                <td class="px-4 py-3"><span class="font-mono">…{{ $license['key_suffix'] }}</span>
+                    @if ($access->allows('licenses.detail'))
+                        @if ($license['can_reveal_key'] ?? false)
+                            <flux:button size="sm" wire:click="requestKeyCode('{{ $license['id'] }}')" wire:loading.attr="disabled">Ver clave completa</flux:button>
+                        @else
+                            <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Clave anterior no recuperable</p>
+                        @endif
+                    @endif
+                </td><td class="px-4 py-3">{{ $license['used_seats'] }} / {{ $license['seats'] }}</td>
                 <td class="px-4 py-3">{{ \Carbon\CarbonImmutable::parse($license['expires_at'], 'UTC')->setTimezone('America/Tegucigalpa')->format('d/m/Y H:i') }}</td>
                 <td class="px-4 py-3"><flux:badge :color="!$license['enabled'] ? 'red' : (\Carbon\CarbonImmutable::parse($license['expires_at'], 'UTC')->isPast() ? 'amber' : 'green')">{{ !$license['enabled'] ? 'Suspendida' : (\Carbon\CarbonImmutable::parse($license['expires_at'], 'UTC')->isPast() ? 'Vencida' : 'Activa') }}</flux:badge></td>
                 <td class="px-4 py-3"><div class="flex gap-2">
@@ -72,6 +81,31 @@
         </tbody></table>
     </div>
     <div class="flex items-center justify-between"><flux:button wire:click="changePage(-1)" :disabled="$page <= 1">Anterior</flux:button><flux:text>Página {{ $page }} de {{ $lastPage }}</flux:text><flux:button wire:click="changePage(1)" :disabled="$page >= $lastPage">Siguiente</flux:button></div>
+    @endif
+    @if ($showKeyModal && $access->allows('licenses.detail'))
+        <flux:modal wire:model="showKeyModal" class="w-full max-w-xl">
+            <div class="space-y-5">
+                <flux:heading size="lg">Ver clave completa</flux:heading>
+                <flux:text>{{ $keyLicenseLabel }}</flux:text>
+                @if ($revealedKey !== '')
+                    <div wire:key="revealed-license-key" x-data="{ timer: null, destroy() { clearTimeout(this.timer) } }" x-init="timer = setTimeout(() => $wire.closeKeyReveal(), 60000)" class="space-y-3">
+                        <flux:text>Consulta autorizada. La clave se ocultará en un minuto.</flux:text>
+                        <p class="break-all rounded-lg bg-zinc-100 p-4 font-mono select-all dark:bg-zinc-800">{{ $revealedKey }}</p>
+                    </div>
+                @elseif ($keyChallengeId !== '')
+                    <flux:text>Enviamos un código de seis dígitos al correo administrador. Vence en 10 minutos y permite cinco intentos. Solicita autorización al administrador e ingresa el código.</flux:text>
+                    @if ($error)<flux:callout variant="danger"><flux:callout.text>{{ $error }}</flux:callout.text></flux:callout>@endif
+                    <form wire:submit="revealKey" class="space-y-4">
+                        <flux:input label="Código de autorización" wire:model="keyCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required />
+                        <flux:button type="submit" variant="primary" wire:loading.attr="disabled">Autorizar y ver clave</flux:button>
+                    </form>
+                    <flux:button size="sm" wire:click="requestKeyCode('{{ $keyLicenseId }}')" wire:loading.attr="disabled">Solicitar otro código</flux:button>
+                @else
+                    <flux:text>La clave se ha ocultado. Solicita un nuevo código para volver a consultarla.</flux:text>
+                @endif
+                <flux:button wire:click="closeKeyReveal">Cerrar</flux:button>
+            </div>
+        </flux:modal>
     @endif
     @if ($showForm && ($editingId ? $access->allows('licenses.update') : $access->allows('licenses.generate')))
     <flux:modal wire:model="showForm" class="w-full max-w-xl">
@@ -97,7 +131,17 @@
                 <flux:select label="Vigencia de la licencia" wire:model="termMonths"><option value="1">1 mes</option><option value="6">6 meses</option><option value="12">1 año</option></flux:select>
                 <flux:text>La vigencia comienza al generar la licencia. La API central calcula el vencimiento por meses calendario.</flux:text>
             @endif
-            <flux:button type="submit" variant="primary" wire:loading.attr="disabled">{{ $editingId ? 'Guardar cambios' : 'Generar clave' }}</flux:button>
+            @if (! $editingId)
+                @if ($generationChallengeId !== '')
+                    <flux:callout icon="envelope"><flux:callout.text>Enviamos un código al correo administrador para autorizar esta creación. Vence en 10 minutos y permite cinco intentos. Si cambias los datos, solicita un código nuevo.</flux:callout.text></flux:callout>
+                    <flux:input label="Código para crear la licencia" wire:model="generationCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required />
+                    <flux:button size="sm" wire:click="requestGenerationCode" wire:loading.attr="disabled">Solicitar otro código de creación</flux:button>
+                @else
+                    <flux:text>La creación requiere un código enviado al correo administrador. La clave se generará después de validar el código.</flux:text>
+                @endif
+            @endif
+            @if ($error)<flux:callout variant="danger"><flux:callout.text>{{ $error }}</flux:callout.text></flux:callout>@endif
+            <flux:button type="submit" variant="primary" wire:loading.attr="disabled">{{ $editingId ? 'Guardar cambios' : ($generationChallengeId !== '' ? 'Autorizar y generar clave' : 'Solicitar código de creación') }}</flux:button>
         </form>
     </flux:modal>
     @endif

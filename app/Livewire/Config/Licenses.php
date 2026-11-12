@@ -83,9 +83,30 @@ class Licenses extends Component
 
     public string $generatedKey = '';
 
+    #[Locked]
+    public string $generationChallengeId = '';
+
+    public string $generationCode = '';
+
     public int $devicesPage = 1;
 
     public int $eventsPage = 1;
+
+    public bool $showKeyModal = false;
+
+    #[Locked]
+    public ?string $keyLicenseId = null;
+
+    #[Locked]
+    public string $keyLicenseLabel = '';
+
+    #[Locked]
+    public string $keyChallengeId = '';
+
+    public string $keyCode = '';
+
+    // Render the secret only in the confirmation response, never in Livewire's public snapshot.
+    protected string $revealedKey = '';
 
     public function mount(): void
     {
@@ -107,6 +128,7 @@ class Licenses extends Component
     public function create(): void
     {
         $this->authorizeAbility('licenses.generate');
+        $this->resetGenerationApproval();
         $this->resetValidation();
         $this->editingId = null;
         $this->label = '';
@@ -126,6 +148,7 @@ class Licenses extends Component
     public function edit(string $id): void
     {
         $this->authorizeAbility('licenses.update');
+        $this->resetGenerationApproval();
         $record = collect($this->licenses)->firstWhere('id', $id);
         abort_unless(is_array($record), 404);
         $this->resetValidation();
@@ -147,12 +170,15 @@ class Licenses extends Component
     public function save(): void
     {
         $this->authorizeAbility($this->editingId ? 'licenses.update' : 'licenses.generate');
-        $this->validate([
-            'customerId' => ['required', 'uuid'],
-            'label' => ['required', 'string', 'max:160'], 'product' => ['required', 'in:hq-client,shpos,shpos-administrator'],
-            'seats' => ['required', 'integer', 'min:1', 'max:10000'],
-            'termMonths' => ['required', 'integer', 'in:1,6,12'], 'renewalMonths' => ['required', 'integer', 'in:0,1,6,12'],
-        ]);
+        if (! $this->editingId && $this->generationChallengeId === '') {
+            $this->requestGenerationCode();
+
+            return;
+        }
+        $this->validateLicenseData();
+        if (! $this->editingId) {
+            $this->validate(['generationCode' => ['required', 'string', 'regex:/\A[0-9]{6}\z/']]);
+        }
         $this->run(function (): void {
             $payload = ['customer_id' => $this->customerId, 'label' => trim($this->label), 'seats' => $this->seats];
             if ($this->editingId) {
@@ -164,18 +190,72 @@ class Licenses extends Component
                 $this->showForm = false;
                 $this->message = 'Licencia actualizada.';
             } else {
-                $result = app(LicenseApiService::class)->generate($payload + ['product' => $this->product, 'term_months' => $this->termMonths]);
+                try {
+                    $result = app(LicenseApiService::class)->generate($payload + ['product' => $this->product, 'term_months' => $this->termMonths,
+                        'challenge_id' => $this->generationChallengeId, 'code' => $this->generationCode]);
+                } finally {
+                    $this->generationCode = '';
+                }
                 $this->generatedKey = (string) ($result['license_key'] ?? '');
+                $this->resetGenerationApproval();
                 $this->showForm = false;
-                $this->message = 'Licencia generada. Guarda la clave; solo se muestra una vez.';
+                $this->message = 'Licencia generada con autorización por correo.';
             }
             $this->loadPage();
         });
     }
 
+    public function requestGenerationCode(): void
+    {
+        $this->authorizeAbility('licenses.generate');
+        abort_unless($this->editingId === null, 422);
+        $this->validateLicenseData();
+        $this->generationCode = '';
+        $this->run(function (): void {
+            $result = app(LicenseApiService::class)->requestGenerationCode([
+                'customer_id' => $this->customerId, 'label' => trim($this->label), 'product' => $this->product,
+                'seats' => $this->seats, 'term_months' => $this->termMonths,
+            ]);
+            $this->generationChallengeId = (string) ($result['challenge_id'] ?? '');
+            $this->resetValidation('generationCode');
+        });
+    }
+
+    public function updated(string $property): void
+    {
+        if (in_array($property, ['customerId', 'label', 'product', 'seats', 'termMonths'], true)) {
+            $this->resetGenerationApproval();
+        }
+    }
+
+    public function updatedShowForm(bool $value): void
+    {
+        if (! $value) {
+            $this->resetGenerationApproval();
+        }
+    }
+
+    private function resetGenerationApproval(): void
+    {
+        $this->generationChallengeId = $this->generationCode = '';
+        $this->resetValidation('generationCode');
+    }
+
+    private function validateLicenseData(): void
+    {
+        $this->label = trim($this->label);
+        $this->validate([
+            'customerId' => ['required', 'uuid'],
+            'label' => ['required', 'string', 'max:160'], 'product' => ['required', 'in:hq-client,shpos,shpos-administrator'],
+            'seats' => ['required', 'integer', 'min:1', 'max:10000'],
+            'termMonths' => ['required', 'integer', 'in:1,6,12'], 'renewalMonths' => ['required', 'integer', 'in:0,1,6,12'],
+        ]);
+    }
+
     public function selectCustomer(string $id = ''): void
     {
         $this->authorizeAbility('licenses.list');
+        $this->closeKeyReveal();
         $customer = $id === '' ? null : collect($this->customers)->firstWhere('id', $id);
         abort_if($id !== '' && ! is_array($customer), 404);
         $this->filterCustomerId = $id;
@@ -290,6 +370,7 @@ class Licenses extends Component
         $this->authorizeAbility('licenses.delete');
         $this->run(function () use ($id): void {
             $this->message = app(LicenseApiService::class)->delete($id);
+            $this->closeKeyReveal();
             if ($this->detailId === $id) {
                 $this->closeDetails();
             }
@@ -305,11 +386,58 @@ class Licenses extends Component
         });
     }
 
+    public function requestKeyCode(string $id): void
+    {
+        $this->authorizeAbility('licenses.detail');
+        $record = collect($this->licenses)->firstWhere('id', $id);
+        abort_unless(is_array($record), 404);
+        if ($this->keyLicenseId !== $id) {
+            $this->closeKeyReveal();
+        }
+        $this->keyCode = $this->revealedKey = '';
+        $this->resetValidation('keyCode');
+        $this->message = '';
+        $this->run(function () use ($id, $record): void {
+            $result = app(LicenseApiService::class)->requestKeyCode($id);
+            $this->keyLicenseId = $id;
+            $this->keyLicenseLabel = (string) $record['label'];
+            $this->keyChallengeId = (string) ($result['challenge_id'] ?? '');
+            $this->showKeyModal = true;
+        });
+    }
+
+    public function revealKey(): void
+    {
+        $this->authorizeAbility('licenses.detail');
+        abort_unless($this->keyLicenseId !== null && $this->keyChallengeId !== '', 422);
+        $this->validate(['keyCode' => ['required', 'string', 'regex:/\A[0-9]{6}\z/']]);
+        $this->run(function (): void {
+            $this->revealedKey = app(LicenseApiService::class)->revealKey($this->keyLicenseId, $this->keyChallengeId, $this->keyCode);
+            $this->keyChallengeId = '';
+        });
+        $this->keyCode = '';
+    }
+
+    public function closeKeyReveal(): void
+    {
+        $this->showKeyModal = false;
+        $this->keyLicenseId = null;
+        $this->keyLicenseLabel = $this->keyChallengeId = $this->keyCode = $this->revealedKey = '';
+        $this->resetValidation('keyCode');
+    }
+
+    public function updatedShowKeyModal(bool $value): void
+    {
+        if (! $value) {
+            $this->closeKeyReveal();
+        }
+    }
+
     public function render(): View
     {
         $this->authorizeAbility('licenses.list');
 
-        return view('livewire.config.licenses', ['access' => app(CurrentUserPermissions::class)]);
+        return view('livewire.config.licenses', ['access' => app(CurrentUserPermissions::class), 'revealedKey' => $this->revealedKey]);
     }
 
     private function loadPage(): void

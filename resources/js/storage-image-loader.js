@@ -16,7 +16,7 @@ const load = (image) => {
 
 const scan = () => {
     document.querySelectorAll('img:not([data-image-viewer-image])').forEach(load);
-    document.querySelectorAll('[data-image-viewer-src]').forEach((trigger) => {
+    document.querySelectorAll('[data-image-viewer-src]:not([data-image-viewer-on-demand])').forEach((trigger) => {
         const source = trigger.dataset.imageViewerSrc;
         if (source) loadSessionImage(source).catch(() => {});
     });

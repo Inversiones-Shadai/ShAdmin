@@ -31,7 +31,16 @@ const synchronizeSession = () => {
     storage = openStorage(session);
 };
 
-const load = (source) => {
+const fetchImage = async (source) => {
+    const local = new URL(source, location.href).origin === new URL(location.href).origin;
+    const response = await fetch(source, { credentials: local ? 'same-origin' : 'omit', cache: 'no-store' });
+    if (!response.ok || !response.headers.get('Content-Type')?.startsWith('image/')) {
+        throw new Error('No fue posible cargar la imagen.');
+    }
+    return response;
+};
+
+const load = (source, fallbackSource) => {
     synchronizeSession();
     if (source.startsWith('data:image/') || source.startsWith('blob:')) return Promise.resolve(source);
     const key = identity(source);
@@ -42,11 +51,10 @@ const load = (source) => {
         const cache = await storage;
         let response = await cache?.match(key).catch(() => null);
         if (!response) {
-            const local = new URL(source, location.href).origin === new URL(location.href).origin;
-            response = await fetch(source, { credentials: local ? 'same-origin' : 'omit', cache: 'no-store' });
-            if (!response.ok || !response.headers.get('Content-Type')?.startsWith('image/')) {
-                throw new Error('No fue posible cargar la imagen.');
-            }
+            response = await fetchImage(source).catch((error) => {
+                if (!fallbackSource || generation !== currentSession()) throw error;
+                return fetchImage(fallbackSource);
+            });
             await cache?.put(key, response.clone()).catch(() => {});
         }
         const objectUrl = URL.createObjectURL(await response.blob());

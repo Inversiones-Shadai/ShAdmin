@@ -29,7 +29,7 @@ class DistributionManagementTest extends TestCase
         session()->put('auth.api.spermisos', [[
             'modulo_l' => ['codigo' => 'frm'],
             'vistas_l' => [
-                ['vistai' => ['codigo' => 'dst'], 'accionesi' => [['codigo' => 'dstbtn01'], ['codigo' => 'dstbtn02'], ['codigo' => 'dstbtn03']]],
+                ['vistai' => ['codigo' => 'dst'], 'accionesi' => [['codigo' => 'dstbtn01'], ['codigo' => 'dstbtn02'], ['codigo' => 'dstbtn03'], ['codigo' => 'dstbtn04']]],
                 ['vistai' => ['codigo' => 'prd'], 'accionesi' => [['codigo' => 'prdbtn06']]],
             ],
         ]]);
@@ -223,5 +223,68 @@ class DistributionManagementTest extends TestCase
             ->set('lots.0.costo', 0)
             ->assertViewHas('unitCostWithTax', 0.0)
             ->assertViewHas('discountReferences', fn (array $references): bool => $references['dto1']['ganancia'] === null);
+    }
+
+    public function test_catalog_lot_can_be_registered_for_a_product_not_in_the_distribution_list(): void
+    {
+        $this->fakeSelectorChoice('distribution-products', ['id' => 88, 'codigo' => 'P088', 'descripcion' => 'Producto descentralizado']);
+        Http::fake(['*/farma/distribucion/lote' => Http::response([
+            'code' => 201, 'data' => ['id' => 18, 'lote' => 'LOCAL-88', 'cantidad' => 0, 'costo' => 10.125, 'isv' => true,
+                'fecha_elaboracion' => '2026-01-01', 'fecha_expiracion' => '2028-01-01', 'factura' => null, 'configurado' => false, 'distribucion' => null],
+        ], 201)]);
+
+        Livewire::test(Distribucion::class)->assertSee('data-test="create-catalog-lot"', false)
+            ->call('openCatalogLot')->assertSet('showCatalogLotModal', true)
+            ->call('rememberSelectorChoice', 'distribution-products', '88')->set('catalogProduct', '88')
+            ->set('catalogLot', ' LOCAL-88 ')->set('catalogManufactured', '2026-01-01')->set('catalogExpires', '2028-01-01')
+            ->set('catalogCost', '10.1250')->set('catalogIsv', true)->call('saveCatalogLot')->assertHasNoErrors()
+            ->assertSet('showCatalogLotModal', false)->assertSet('showPricingModal', true)->assertSet('selectedLot', '18')
+            ->assertSet('selectedProduct.producto_id', 88)->assertSee('Producto descentralizado')
+            ->assertSet('lots.0.cantidad', 0)->assertSet('isv', true)->assertSet('precio', '')->assertDispatched('sweetalert:toast');
+
+        Http::assertSent(fn (Request $request): bool => $request->method() === 'POST'
+            && str_ends_with($request->url(), '/farma/distribucion/lote')
+            && $request->hasHeader('Action-Btn', 'dstbtn04') && $request->hasHeader('Idempotency-Key')
+            && $request['producto'] === 88 && $request['lote'] === 'LOCAL-88' && $request['costo'] === '10.1250'
+            && ! array_key_exists('cantidad', $request->data()) && ! array_key_exists('compra', $request->data()));
+    }
+
+    public function test_registering_lots_requires_its_own_permission_on_every_action(): void
+    {
+        session()->forget('auth.api.abilities');
+        session()->put('auth.api.spermisos', [['modulo_l' => ['codigo' => 'frm'], 'vistas_l' => [
+            ['vistai' => ['codigo' => 'dst'], 'accionesi' => [['codigo' => 'dstbtn01'], ['codigo' => 'dstbtn02'], ['codigo' => 'dstbtn03']]],
+        ]]]);
+        Livewire::test(Distribucion::class)->assertDontSee('data-test="create-catalog-lot"', false)->call('openCatalogLot')->assertForbidden();
+        Livewire::test(Distribucion::class)->call('saveCatalogLot')->assertForbidden();
+        Http::assertNotSent(fn (Request $request): bool => $request->method() === 'POST');
+    }
+
+    public function test_catalog_lot_validation_blocks_blank_lots_reversed_dates_and_negative_cost(): void
+    {
+        Livewire::test(Distribucion::class)->call('openCatalogLot')->set('catalogProduct', '4')->set('catalogLot', ' ')
+            ->set('catalogManufactured', '2029-01-01')->set('catalogExpires', '2028-01-01')->set('catalogCost', '-1')
+            ->call('saveCatalogLot')->assertHasErrors(['catalogLot', 'catalogManufactured', 'catalogCost']);
+        Http::assertNotSent(fn (Request $request): bool => $request->method() === 'POST');
+    }
+
+    public function test_duplicate_lot_error_stays_in_the_registration_form(): void
+    {
+        Http::fake(['*/farma/distribucion/lote' => Http::response([
+            'code' => 422, 'message' => 'Revisa los datos del lote.', 'data' => ['errors' => ['lote' => ['Este lote ya está registrado.']]],
+        ], 422)]);
+        Livewire::test(Distribucion::class)->call('openCatalogLot')->set('catalogProduct', '4')->set('catalogLot', 'LOCAL')
+            ->call('saveCatalogLot')->assertHasErrors(['catalogLot'])->assertSet('showCatalogLotModal', true)
+            ->assertSee('Este lote ya está registrado.');
+        Http::assertSent(fn (Request $request): bool => $request->method() === 'POST'
+            && $request['costo'] === null && $request['fecha_elab'] === null && $request['fecha_exp'] === null);
+    }
+
+    public function test_expired_session_during_lot_registration_redirects_to_login(): void
+    {
+        Http::fake(['*/farma/distribucion/lote' => Http::response(['code' => 401, 'message' => 'Sesión expirada.'], 401)]);
+        Livewire::test(Distribucion::class)->call('openCatalogLot')->set('catalogProduct', '4')->set('catalogLot', 'LOCAL')
+            ->call('saveCatalogLot')->assertRedirect(route('login'));
+        $this->assertNull(session('auth.api.token'));
     }
 }

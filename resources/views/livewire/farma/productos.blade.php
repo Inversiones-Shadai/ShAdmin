@@ -104,6 +104,8 @@
                                                 wire:click="viewImage({{ $product['id'] }})"
                                                 data-image-viewer-key="products:{{ $product['id'] }}"
                                                 data-image-viewer-src="{{ $product['imagen_url'] ?? '' }}"
+                                                data-image-viewer-on-demand
+                                                data-image-viewer-fallback-src="{{ route('farma.products.preview', $product['id']) }}"
                                                 data-image-viewer-name="{{ $product['descripcion'] }}"
                                                 class="grid size-10 shrink-0 place-items-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-slate-400 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:text-white"
                                                 title="Ver imagen"
@@ -251,7 +253,7 @@
                     @error('productoPadreId') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
-                <x-remote-select source="product-categories" cache="options.categorias" wire:model="categoria" label="Categoría" label:class="flex min-h-8 items-center" placeholder="Selecciona una categoría" />
+                <x-remote-select source="product-categories" cache="options.categorias" wire:model.live="categoria" label="Categoría" label:class="flex min-h-8 items-center" placeholder="Selecciona una categoría" />
                 <div class="min-w-0">
                     <div class="mb-2 flex min-h-8 items-center justify-between gap-3">
                         <span class="text-sm font-medium text-slate-800 dark:text-slate-200">Laboratorio</span>
@@ -268,10 +270,15 @@
                 </div>
                 <div class="min-w-0 sm:col-span-2 lg:col-span-2">
                     <div class="mb-2 flex min-h-8 items-center justify-between gap-3">
-                        <label class="text-sm font-medium text-slate-800 dark:text-slate-200">Familia</label>
-                        <flux:button type="button" wire:click="openFamilyPicker" icon="magnifying-glass" size="sm" data-test="open-family-picker">
-                            {{ $selectedFamily ? 'Cambiar' : 'Seleccionar' }}
-                        </flux:button>
+                        <span class="text-sm font-medium text-slate-800 dark:text-slate-200">Familia{{ $familyRequired ? ' (obligatoria)' : '' }}</span>
+                        <div class="flex flex-wrap gap-2">
+                            <flux:button type="button" wire:click="openFamilyPicker" icon="magnifying-glass" size="sm" data-test="open-family-picker">
+                                {{ $selectedFamily ? 'Cambiar' : 'Seleccionar' }}
+                            </flux:button>
+                            @if ($selectedFamily && ! $familyRequired)
+                                <flux:button type="button" wire:click="clearFamily" size="sm">Quitar</flux:button>
+                            @endif
+                        </div>
                     </div>
                     <div class="grid gap-3 rounded-lg border border-slate-200 bg-white p-3 text-sm dark:border-slate-700 dark:bg-slate-900 sm:grid-cols-3" data-test="selected-family">
                         <div>
@@ -471,9 +478,9 @@
                         <tbody class="divide-y divide-slate-200 bg-white dark:divide-slate-700 dark:bg-slate-900">
                             @forelse ($familyPicker['items'] as $family)
                                 <tr wire:key="family-option-{{ $family['id'] }}">
-                                    <td class="truncate px-2 py-2.5 font-medium text-slate-800 dark:text-slate-100" title="{{ $family['nombre'] ?? $family['label'] }}">{{ $family['nombre'] ?? $family['label'] }}</td>
-                                    <td class="truncate px-2 py-2.5 text-slate-600 dark:text-slate-300" title="{{ $family['presentacion'] ?? '—' }}">{{ $family['presentacion'] ?? '—' }}</td>
-                                    <td class="truncate px-2 py-2.5 text-slate-600 dark:text-slate-300" title="{{ $family['administracion'] ?? '—' }}">{{ $family['administracion'] ?? '—' }}</td>
+                                    <td class="whitespace-normal px-2 py-2.5 font-medium text-slate-800 [overflow-wrap:anywhere] dark:text-slate-100" title="{{ $family['nombre'] ?? $family['label'] }}">{{ $family['nombre'] ?? $family['label'] }}</td>
+                                    <td class="whitespace-normal px-2 py-2.5 text-slate-600 [overflow-wrap:anywhere] dark:text-slate-300" title="{{ $family['presentacion'] ?? '—' }}">{{ $family['presentacion'] ?? '—' }}</td>
+                                    <td class="whitespace-normal px-2 py-2.5 text-slate-600 [overflow-wrap:anywhere] dark:text-slate-300" title="{{ $family['administracion'] ?? '—' }}">{{ $family['administracion'] ?? '—' }}</td>
                                     <td class="px-2 py-2.5 text-right"><flux:button type="button" wire:click="selectFamily({{ $family['id'] }})" wire:loading.attr="disabled" wire:target="retryFamilyPage,refreshOptions,familySearch,previousFamilyPage,nextFamilyPage,selectFamily" variant="primary" size="sm">Seleccionar</flux:button></td>
                                 </tr>
                             @empty

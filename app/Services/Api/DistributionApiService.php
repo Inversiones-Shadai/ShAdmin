@@ -9,6 +9,7 @@ use App\Exceptions\ApiOperationException;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Str;
 
 use function is_array;
 use function is_string;
@@ -19,6 +20,7 @@ class DistributionApiService
         'list' => 'dstbtn01',
         'detail' => 'dstbtn02',
         'save' => 'dstbtn03',
+        'create-lot' => 'dstbtn04',
     ];
 
     public function __construct(
@@ -64,6 +66,19 @@ class DistributionApiService
         return is_array($data) ? $data : [];
     }
 
+    /** @param array<string, mixed> $payload
+     * @return array<string, mixed>
+     */
+    public function createCatalogLot(array $payload): array
+    {
+        $data = $this->send('post', '/lote', $payload, 'create-lot')->data;
+        if (! is_array($data) || (int) ($data['id'] ?? 0) < 1) {
+            throw new ApiOperationException('El servidor no devolvió el lote registrado.');
+        }
+
+        return $data;
+    }
+
     /** @param array<string, mixed> $payload */
     private function send(string $method, string $path, array $payload, string $action): ApiResponseData
     {
@@ -75,6 +90,9 @@ class DistributionApiService
 
         try {
             $request = $this->client->request()->withToken($token)->withHeader('Action-Btn', self::ACTIONS[$action]);
+            if ($method === 'post') {
+                $request = $request->withHeader('Idempotency-Key', (string) Str::uuid());
+            }
             $response = $this->dispatch($request, $method, $this->path($path), $payload);
         } catch (ApiConfigurationException $exception) {
             throw new ApiOperationException($exception->getMessage());
@@ -104,6 +122,7 @@ class DistributionApiService
     {
         return match ($method) {
             'get' => $request->get($path, $payload),
+            'post' => $request->post($path, $payload),
             'put' => $request->put($path, $payload),
             default => throw new ApiOperationException('Método HTTP no soportado.'),
         };

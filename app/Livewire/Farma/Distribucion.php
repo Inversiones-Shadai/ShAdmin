@@ -63,13 +63,110 @@ class Distribucion extends Component
 
     public bool $promocion_todos_stocks = true;
 
+    /** @var array<int, int> */
     public array $promocion_stock_ids = [];
 
     public string $promotionStock = '';
 
+    /** @var array<int, array<string, mixed>> */
     public array $promotionStocks = [];
 
+    /** @var array<int, string> */
     public array $promotionStockLabels = [];
+
+    public bool $showCatalogLotModal = false;
+
+    public string $catalogProduct = '';
+
+    /** @var array<int, array<string, mixed>> */
+    public array $catalogProductChoices = [];
+
+    public string $catalogLot = '';
+
+    public string $catalogManufactured = '';
+
+    public string $catalogExpires = '';
+
+    public string $catalogCost = '';
+
+    public bool $catalogIsv = false;
+
+    public ?string $catalogLotError = null;
+
+    public function openCatalogLot(): void
+    {
+        $this->authorizeAbility('distribution.list');
+        $this->authorizeAbility('distribution.create-lot');
+        $this->closeCatalogLot();
+        $this->showCatalogLotModal = true;
+    }
+
+    public function closeCatalogLot(): void
+    {
+        $this->reset('showCatalogLotModal', 'catalogProduct', 'catalogProductChoices', 'catalogLot', 'catalogManufactured', 'catalogExpires', 'catalogCost', 'catalogIsv', 'catalogLotError');
+        $this->resetValidation();
+    }
+
+    public function saveCatalogLot(): void
+    {
+        $this->authorizeAbility('distribution.list');
+        $this->authorizeAbility('distribution.create-lot');
+        $this->catalogLotError = null;
+        $this->catalogLot = trim($this->catalogLot);
+        $validated = $this->validate([
+            'catalogProduct' => ['required', 'integer', 'min:1'],
+            'catalogLot' => ['required', 'string', 'max:100'],
+            'catalogManufactured' => ['nullable', 'date_format:Y-m-d', ...($this->catalogExpires !== '' ? ['before_or_equal:catalogExpires'] : [])],
+            'catalogExpires' => ['nullable', 'date_format:Y-m-d'],
+            'catalogCost' => ['nullable', 'numeric', 'min:0', 'max:99999999.9999', 'decimal:0,4'],
+            'catalogIsv' => ['boolean'],
+        ], [
+            'catalogProduct.required' => 'Selecciona un producto.',
+            'catalogLot.required' => 'Ingresa el número de lote.',
+            'catalogLot.max' => 'El lote no puede exceder 100 caracteres.',
+            'catalogManufactured.before_or_equal' => 'La elaboración no puede ser posterior a la expiración.',
+            'catalogCost.min' => 'El costo no puede ser negativo.',
+            'catalogCost.decimal' => 'Usa como máximo cuatro decimales para el costo.',
+        ]);
+
+        try {
+            $lot = $this->api()->createCatalogLot([
+                'producto' => (int) $validated['catalogProduct'], 'lote' => $validated['catalogLot'],
+                'fecha_elab' => $validated['catalogManufactured'] ?: null, 'fecha_exp' => $validated['catalogExpires'] ?: null,
+                'costo' => $validated['catalogCost'] !== '' ? $validated['catalogCost'] : null, 'isv' => $validated['catalogIsv'],
+            ]);
+        } catch (ApiSessionExpiredException) {
+            $this->redirectToLogin();
+
+            return;
+        } catch (ApiOperationException $exception) {
+            $this->catalogLotError = $exception->getMessage();
+            $fields = ['producto' => 'catalogProduct', 'lote' => 'catalogLot', 'fecha_elab' => 'catalogManufactured', 'fecha_exp' => 'catalogExpires', 'costo' => 'catalogCost', 'isv' => 'catalogIsv'];
+            foreach ($exception->errors as $field => $messages) {
+                foreach ((array) $messages as $message) {
+                    $this->addError($fields[$field] ?? $field, $message);
+                }
+            }
+
+            return;
+        }
+
+        $productId = (int) $validated['catalogProduct'];
+        $product = collect($this->catalogProductChoices)->first(fn (array $item): bool => (int) ($item['id'] ?? 0) === $productId);
+        $this->closeCatalogLot();
+        $this->search = '';
+        $this->loadPage(1);
+        $this->dispatch('sweetalert:toast', icon: 'success', title: 'Lote registrado. Las existencias de los stocks no se modificaron.');
+
+        if (app(CurrentUserPermissions::class)->allows('distribution.detail')) {
+            $this->selectedProduct = collect($this->products)->firstWhere('producto_id', $productId)
+                ?? ['producto_id' => $productId, 'codigo' => $product['codigo'] ?? '', 'descripcion' => $product['descripcion'] ?? 'Producto', 'laboratorio' => ''];
+            $this->lots = [$lot + ['label' => $lot['lote'] ?? 'Lote']];
+            $this->selectedLot = (string) $lot['id'];
+            $this->fillPricingFromSelectedLot();
+            $this->showPricingModal = true;
+        }
+    }
 
     public function addPromotionStock(): void
     {
@@ -121,7 +218,7 @@ class Distribucion extends Component
         $this->lots = [];
         $this->selectedProduct = $product;
         $this->showPricingModal = true;
-        $this->selectedLot = isset($this->lots[0]['id']) ? (string) $this->lots[0]['id'] : '';
+        $this->selectedLot = '';
         $this->fillPricingFromSelectedLot();
     }
 
@@ -228,6 +325,7 @@ class Distribucion extends Component
                 'detail' => app(CurrentUserPermissions::class)->allows('distribution.detail'),
                 'save' => app(CurrentUserPermissions::class)->allows('distribution.save'),
                 'image' => app(CurrentUserPermissions::class)->allows('products.image'),
+                'createLot' => app(CurrentUserPermissions::class)->allows('distribution.create-lot'),
             ],
             'activeLot' => $this->selectedLotRecord(),
             'unitCostWithTax' => $this->unitCostWithTax(),
@@ -285,7 +383,8 @@ class Distribucion extends Component
         $this->encabezado_texto = (string) ($distribution['encabezado_texto'] ?? '');
         $this->promocion_todos_stocks = (bool) ($distribution['promocion_todos_stocks'] ?? true);
         $this->promocion_stock_ids = array_values(array_map('intval', $distribution['promocion_stock_ids'] ?? []));
-        $this->promotionStockLabels = collect($distribution['promocion_stocks'] ?? [])->pluck('descripcion', 'id')->all();
+        $stocks = $distribution['promocion_stocks'] ?? [];
+        $this->promotionStockLabels = is_array($stocks) ? collect($stocks)->pluck('descripcion', 'id')->all() : [];
         $this->promotionStock = '';
         $this->promotionStocks = [];
     }

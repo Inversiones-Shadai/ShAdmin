@@ -13,6 +13,7 @@ use App\Services\Images\ImageSource;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use InvalidArgumentException;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -225,11 +226,12 @@ class Productos extends Component
 
         $this->editingId = $id;
         $this->categoria = (string) $product['categoria_id'];
+        $this->options['categorias'] = is_array($record['categoria'] ?? null) ? [$record['categoria']] : [];
         $this->laboratorio = (string) $product['laboratorio_id'];
         $this->laboratoryName = $product['laboratorio_label'];
         $this->unidad = (string) $product['unidad_id'];
-        $this->familia = (string) $product['familia_id'];
         if ($product['familia_id'] > 0) {
+            $this->familia = (string) $product['familia_id'];
             $this->options['familias'] = [[
                 'id' => $product['familia_id'],
                 'nombre' => $product['familia_label'],
@@ -361,7 +363,7 @@ class Productos extends Component
             'categoria' => ['required', 'integer', 'min:1'],
             'laboratorio' => ['required', 'integer', 'min:1'],
             'unidad' => ['required', 'integer', 'min:1'],
-            'familia' => ['required', 'integer', 'min:1'],
+            'familia' => [Rule::requiredIf($this->familyRequired()), 'nullable', 'integer', 'min:1'],
             'codigo' => ['required', 'string', 'max:20'],
             'codigobar' => ['nullable', 'string', 'max:50'],
             'descripcion' => ['required', 'string', 'max:150'],
@@ -401,7 +403,7 @@ class Productos extends Component
             'categoria' => (int) $validated['categoria'],
             'laboratorio' => (int) $validated['laboratorio'],
             'unidad' => (int) $validated['unidad'],
-            'familia' => (int) $validated['familia'],
+            'familia' => filled($validated['familia'] ?? null) ? (int) $validated['familia'] : null,
             'codigo' => $this->sanitizeText((string) $validated['codigo'], 20),
             'codigobar' => $this->nullableText((string) ($validated['codigobar'] ?? ''), 50),
             'descripcion' => $this->sanitizeText((string) $validated['descripcion'], 150),
@@ -650,6 +652,15 @@ class Productos extends Component
     {
         $this->showFamilyPicker = false;
         $this->familyOptions = [];
+    }
+
+    public function clearFamily(): void
+    {
+        if ($this->showFormModal && ! $this->familyRequired()) {
+            $this->familia = '';
+            $this->options['familias'] = [];
+            $this->resetErrorBag('familia');
+        }
     }
 
     public function selectFamily(int $id): void
@@ -992,6 +1003,11 @@ class Productos extends Component
         $this->loadPage(1);
     }
 
+    public function updatedCategoria(): void
+    {
+        $this->resetErrorBag('familia');
+    }
+
     public function render(): View
     {
         $permissions = $this->permissions();
@@ -1005,6 +1021,7 @@ class Productos extends Component
 
         return view('livewire.farma.productos', [
             'visibleProducts' => $visibleProducts,
+            'familyRequired' => $this->familyRequired(),
             'selectedFamily' => $this->optionById('familias', (int) $this->familia),
             'selectedUnit' => $this->optionById('unidades', (int) $this->unidad),
             'selectedActives' => $this->paginateItems($selectedActives, $this->selectedActivePage),
@@ -1291,6 +1308,13 @@ class Productos extends Component
         }
 
         return null;
+    }
+
+    private function familyRequired(): bool
+    {
+        $category = $this->optionById('categorias', (int) $this->categoria);
+
+        return ($category['requires_family'] ?? false) === true;
     }
 
     /**

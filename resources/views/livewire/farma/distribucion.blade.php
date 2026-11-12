@@ -4,7 +4,12 @@
             <flux:icon.currency-dollar class="size-4" />Farma · Productos
         </div>
         <flux:heading size="xl">Distribución</flux:heading>
-        <flux:text class="mt-2 max-w-3xl">Establece el precio y los descuentos de cada lote. El costo y el ISV se heredan de la compra.</flux:text>
+        <div class="flex flex-wrap items-end justify-between gap-4">
+            <flux:text class="mt-2 max-w-3xl">Establece el precio y los descuentos de cada lote. También puedes registrar lotes de existencias descentralizadas.</flux:text>
+            @if ($access['createLot'])
+                <flux:button wire:click="openCatalogLot" variant="primary" icon="plus" data-test="create-catalog-lot">Registrar lote</flux:button>
+            @endif
+        </div>
     </header>
 
     <section class="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
@@ -20,7 +25,7 @@
             <div class="m-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">{{ $loadError }}</div>
         @elseif ($products === [])
             <div class="grid min-h-56 place-items-center p-8 text-center">
-                <div><span class="mx-auto grid size-12 place-items-center rounded-xl bg-slate-100 text-slate-400 dark:bg-slate-800"><flux:icon.archive-box class="size-6" /></span><p class="mt-3 font-medium">No hay productos con lotes</p><p class="mt-1 text-sm text-slate-500">Los productos aparecerán cuando una compra sea enviada al Kardex.</p></div>
+                <div><span class="mx-auto grid size-12 place-items-center rounded-xl bg-slate-100 text-slate-400 dark:bg-slate-800"><flux:icon.archive-box class="size-6" /></span><p class="mt-3 font-medium">No hay productos con lotes</p><p class="mt-1 text-sm text-slate-500">Los productos aparecerán al enviar una compra al Kardex o al registrar un lote en el catálogo.</p></div>
             </div>
         @else
             <div class="min-h-0 flex-1 overflow-auto overscroll-contain" tabindex="0" role="region" aria-label="Productos con lotes">
@@ -82,6 +87,28 @@
             </div>
         @endif
     </section>
+
+    @if ($access['createLot'])
+    <flux:modal wire:model.self="showCatalogLotModal" class="w-full md:max-w-2xl">
+        <form wire:submit="saveCatalogLot" class="space-y-5" data-test="catalog-lot-form">
+            <div><flux:heading size="lg">Registrar lote</flux:heading><flux:text class="mt-2">Para productos que ya tienen existencias en los stocks descentralizados.</flux:text></div>
+            <flux:callout icon="information-circle">Este registro agrega el lote al catálogo para configurar precios. Las existencias de los stocks se mantienen sin cambios.</flux:callout>
+            @if ($catalogLotError)<flux:callout variant="danger">{{ $catalogLotError }}</flux:callout>@endif
+            <x-remote-select source="distribution-products" cache="catalogProductChoices" wire:model.live="catalogProduct" label="Producto" placeholder="Buscar producto, incluso sin lotes registrados" required />
+            <flux:input wire:model="catalogLot" label="Número de lote" maxlength="100" required description="Copia el lote exactamente como está registrado en el stock." />
+            <div class="grid gap-5 sm:grid-cols-2">
+                <flux:input wire:model="catalogManufactured" label="Fecha de elaboración" type="date" description="Opcional. Usa la fecha del lote existente." />
+                <flux:input wire:model="catalogExpires" label="Fecha de expiración" type="date" description="Opcional. Usa la fecha del lote existente." />
+            </div>
+            <flux:input wire:model="catalogCost" label="Costo unitario sin ISV" type="number" min="0" max="99999999.9999" step="0.0001" description="Opcional. Costo por unidad base para calcular la referencia de ganancia." />
+            <flux:checkbox wire:model="catalogIsv" label="Aplica ISV" description="Se usará al configurar los precios de este lote." />
+            <div class="flex justify-end gap-3">
+                <flux:button type="button" wire:click="closeCatalogLot">Cancelar</flux:button>
+                <flux:button type="submit" variant="primary" wire:loading.attr="disabled">Registrar lote</flux:button>
+            </div>
+        </form>
+    </flux:modal>
+    @endif
 
     <flux:modal wire:model.self="showPricingModal" class="w-[calc(100vw-2rem)] max-w-5xl bg-white! dark:bg-slate-900!">
         <form wire:submit="savePricing" class="space-y-5" data-test="distribution-pricing-modal">

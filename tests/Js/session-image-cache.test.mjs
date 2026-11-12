@@ -77,3 +77,22 @@ test('failed requests can retry and cache write failure does not prevent display
     assert.match(await cache.loadSessionImage('https://storage.test/uuid'), /^blob:/);
     assert.equal(count, 2);
 });
+
+test('an expired signed URL uses the protected preview and caches it under the image UUID', async () => {
+    const requests = [];
+    const preview = '/farma/productos/9/preview';
+    const signed = 'https://storage.test/uuid?X-Amz-Signature=expired';
+    const fetchImage = async (url, { credentials }) => {
+        requests.push({ url, credentials });
+        return url === signed ? new Response('', { status: 403 }) : response();
+    };
+
+    let cache = await setup('expired-url', fetchImage);
+    assert.match(await cache.loadSessionImage(signed, preview), /^blob:/);
+    cache = await setup('expired-url', fetchImage);
+    assert.match(await cache.loadSessionImage(signed.replace('expired', 'new'), preview), /^blob:/);
+    assert.deepEqual(requests, [
+        { url: signed, credentials: 'omit' },
+        { url: preview, credentials: 'same-origin' },
+    ]);
+});

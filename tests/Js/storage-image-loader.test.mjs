@@ -9,13 +9,17 @@ const source = (await readFile(new URL('../../resources/js/storage-image-loader.
 const setup = (loadSessionImage) => {
     const listeners = new Map();
     const root = {};
-    const body = () => ({ parent: root, images: [] });
+    const body = () => ({ parent: root, images: [], triggers: [] });
     const document = {
         documentElement: root,
         body: body(),
         readyState: 'complete',
         addEventListener: (name, callback) => listeners.set(name, callback),
-        querySelectorAll: (selector) => selector.startsWith('img') ? document.body.images : [],
+        querySelectorAll(selector) {
+            if (selector.startsWith('img')) return document.body.images;
+            return document.body.triggers.filter(({ dataset }) =>
+                !selector.includes(':not([data-image-viewer-on-demand])') || !('imageViewerOnDemand' in dataset));
+        },
     };
     let observer;
     class MutationObserver {
@@ -43,9 +47,19 @@ const setup = (loadSessionImage) => {
             return image;
         },
         changeImage(image, url) { image.dataset.sessionImageSrc = url; mutate(document.body); },
+        addTrigger(dataset) { document.body.triggers.push({ dataset }); mutate(document.body); },
     };
 };
 const flush = () => new Promise((resolve) => setImmediate(resolve));
+
+test('adding product image buttons to the table does not download their images', async () => {
+    const requests = [];
+    const page = setup(async (url) => { requests.push(url); return `blob:${url}`; });
+    page.addTrigger({ imageViewerSrc: '/products/9', imageViewerOnDemand: '' });
+    page.addTrigger({ imageViewerSrc: '/suppliers/4' });
+    await flush();
+    assert.deepEqual(requests, ['/suppliers/4']);
+});
 
 test('loads modal images inserted after navigating to purchases and replacing the body', async () => {
     const requests = [];

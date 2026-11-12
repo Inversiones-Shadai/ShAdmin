@@ -1,6 +1,34 @@
 [
   {
     "methods": ["GET", "HEAD"],
+    "uri": "api/farma/reportes/ventas-perdidas"
+  },
+  {
+    "methods": ["POST"],
+    "uri": "api/farma/distribucion/lote"
+  },
+  {
+    "methods": ["GET", "HEAD", "POST"],
+    "uri": "api/config/appconfig"
+  },
+  {
+    "methods": ["GET", "HEAD", "PUT"],
+    "uri": "api/config/appconfig/{id}"
+  },
+  {
+    "methods": ["GET", "HEAD"],
+    "uri": "api/farma/alertas-venta"
+  },
+  {
+    "methods": ["POST"],
+    "uri": "api/farma/alertas-venta"
+  },
+  {
+    "methods": ["PUT", "DELETE"],
+    "uri": "api/farma/alertas-venta/{id}"
+  },
+  {
+    "methods": ["GET", "HEAD"],
     "uri": "api/farma/reporte-costeo/consultar"
   },
   {
@@ -1993,6 +2021,24 @@
       "DELETE"
     ],
     "uri": "api/config/licenses/{id}/devices/{activation}"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/licenses/{id}/key-code"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/licenses/generation-code"
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "uri": "api/config/licenses/{id}/reveal-key"
   },
   {
     "methods": [

@@ -179,6 +179,52 @@ class ProductManagementTest extends TestCase
             && $request->hasHeader('Action-Btn', 'prdbtn04'));
     }
 
+    public function test_create_requires_family_for_the_selected_category_only(): void
+    {
+        $this->fakeList();
+        Http::fake([
+            'api.example.test/api/selectors/product-categories*' => function (Request $request) {
+                parse_str(parse_url($request->url(), PHP_URL_QUERY) ?? '', $query);
+                $id = (int) $query['selected'];
+                $name = $id === 2 ? 'Farmacia' : 'Consumo';
+
+                return Http::response(['data' => [[
+                    'id' => (string) $id,
+                    'label' => $name,
+                    'record' => ['id' => $id, 'nombre' => $name, 'requires_family' => $id === 2],
+                ]]]);
+            },
+            'api.example.test/api/farma/productos/producto/crear' => Http::response([
+                'message' => 'Producto creado correctamente.', 'code' => 201, 'data' => true,
+            ]),
+        ]);
+
+        Livewire::test(Productos::class)
+            ->call('openCreate')
+            ->call('rememberSelectorChoice', 'product-categories', '2')
+            ->set('categoria', '2')
+            ->assertSee('Familia (obligatoria)')
+            ->set('laboratorio', '3')
+            ->set('unidad', '4')
+            ->set('codigo', 'PRD-010')
+            ->set('descripcion', 'Producto de prueba')
+            ->set('estado', '1')
+            ->call('save')
+            ->assertHasErrors(['familia' => 'required'])
+            ->call('rememberSelectorChoice', 'product-categories', '8')
+            ->set('categoria', '8')
+            ->assertDontSee('Familia (obligatoria)')
+            ->call('save')
+            ->assertHasNoErrors()
+            ->assertSet('showFormModal', false);
+
+        $requests = Http::recorded(fn (Request $request): bool => $request->method() === 'POST');
+        $this->assertCount(1, $requests);
+        [$request] = $requests->first();
+        $this->assertSame(['id' => 8], $request['categoria']);
+        $this->assertNull($request['familia']);
+    }
+
     public function test_it_opens_the_global_image_viewer_for_products(): void
     {
         $this->fakeList(hasImage: true);
@@ -195,6 +241,7 @@ class ProductManagementTest extends TestCase
         Livewire::test(Productos::class)
             ->assertSee('data-test="view-product-image-button"', false)
             ->assertSee('data-image-viewer-key="products:9"', false)
+            ->assertSee('data-image-viewer-on-demand', false)
             ->assertSee('data-image-viewer-name="Acetaminofén 500 mg"', false)
             ->call('viewImage', 9)
             ->assertDispatched('image-viewer:show')

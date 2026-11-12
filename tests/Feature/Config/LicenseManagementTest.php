@@ -48,6 +48,9 @@ class LicenseManagementTest extends TestCase
         $this->permissions(['licbtn01', 'licbtn02']);
         $this->fakeCustomers();
         Http::fake(['api.example.test/api/config/licenses*' => function ($request) {
+            if (str_ends_with($request->url(), '/generation-code')) {
+                return Http::response(['code' => 200, 'data' => ['challenge_id' => '30000000-0000-4000-8000-000000000001']]);
+            }
             if ($request->method() === 'GET') {
                 return Http::response(['code' => 200, 'data' => [], 'meta' => ['current_page' => 1, 'last_page' => 1]]);
             }
@@ -56,11 +59,16 @@ class LicenseManagementTest extends TestCase
         }]);
         Livewire::test(Licenses::class)->call('create')->set('label', 'Synthetic license')
             ->set('termMonths', 6)->set('seats', 2)->call('save')->assertHasNoErrors()
+            ->assertSet('generatedKey', '')->assertSet('showForm', true)->assertSee('Código para crear la licencia')
+            ->set('generationCode', '123456')->call('save')->assertHasNoErrors()
             ->assertSet('generatedKey', 'SHD-SYNTHETIC-ONCE')->assertSee('SHD-SYNTHETIC-ONCE')
+            ->assertSet('generationCode', '')->assertSet('generationChallengeId', '')
             ->set('generatedKey', '')->assertDontSee('SHD-SYNTHETIC-ONCE');
         Http::assertSent(fn ($request) => $request->method() === 'POST' && $request->hasHeader('Action-Btn', 'licbtn02')
             && $request['customer_id'] === '20000000-0000-4000-8000-000000000001' && $request['term_months'] === 6 && $request['label'] === 'Synthetic license' && $request['product'] === 'shpos'
-            && ! array_key_exists('expires_at', $request->data()) && $request['seats'] === 2);
+            && ! array_key_exists('expires_at', $request->data()) && $request['seats'] === 2
+            && parse_url($request->url(), PHP_URL_PATH) === '/api/config/licenses'
+            && $request['code'] === '123456' && $request['challenge_id'] === '30000000-0000-4000-8000-000000000001');
     }
 
     public function test_details_and_unlink_require_separate_permissions(): void
@@ -195,6 +203,104 @@ class LicenseManagementTest extends TestCase
         });
     }
 
+    public function test_reveals_key_only_after_email_code_confirmation_and_clears_it_on_close(): void
+    {
+        $this->permissions(['licbtn01', 'licbtn04']);
+        $this->fakeCustomers();
+        Http::fake([
+            'api.example.test/api/config/licenses/*/key-code' => Http::response(['code' => 200, 'data' => ['challenge_id' => '30000000-0000-4000-8000-000000000001']]),
+            'api.example.test/api/config/licenses/*/reveal-key' => Http::response(['code' => 200, 'data' => ['license_key' => 'SHD-REVEALED-SECRET']]),
+        ]);
+        $this->fakeList();
+        $component = Livewire::test(Licenses::class)->call('selectCustomer', '20000000-0000-4000-8000-000000000001')
+            ->assertSee('Ver clave completa')->assertDontSee('SHD-REVEALED-SECRET')
+            ->call('requestKeyCode', '10000000-0000-4000-8000-000000000001')
+            ->assertSet('showKeyModal', true)->assertSee('correo administrador')->assertSee('Código de autorización')
+            ->assertDontSee('SHD-REVEALED-SECRET')->set('keyCode', '123456')->call('revealKey')
+            ->assertHasNoErrors()->assertSee('SHD-REVEALED-SECRET')->assertSet('keyCode', '')->assertSet('keyChallengeId', '');
+        $this->assertArrayNotHasKey('revealedKey', $component->snapshot['data']);
+        $component->call('closeKeyReveal')->assertSet('showKeyModal', false)->assertSet('keyLicenseId', null)
+            ->assertDontSee('SHD-REVEALED-SECRET');
+        Http::assertSent(fn ($request) => str_ends_with($request->url(), '/key-code') && $request->hasHeader('Action-Btn', 'licbtn04'));
+        Http::assertSent(fn ($request) => str_ends_with($request->url(), '/reveal-key') && $request->hasHeader('Action-Btn', 'licbtn04')
+            && $request['challenge_id'] === '30000000-0000-4000-8000-000000000001' && $request['code'] === '123456');
+    }
+
+    public function test_key_code_errors_do_not_expose_key_and_can_be_corrected(): void
+    {
+        $this->permissions(['licbtn01', 'licbtn04']);
+        $this->fakeCustomers();
+        Http::fake([
+            'api.example.test/api/config/licenses/*/key-code' => Http::response(['code' => 200, 'data' => ['challenge_id' => '30000000-0000-4000-8000-000000000001']]),
+            'api.example.test/api/config/licenses/*/reveal-key' => Http::response(['code' => 422, 'message' => 'El código es incorrecto, venció o ya fue utilizado.'], 422),
+        ]);
+        $this->fakeList();
+        Livewire::test(Licenses::class)->call('selectCustomer', '20000000-0000-4000-8000-000000000001')
+            ->call('requestKeyCode', '10000000-0000-4000-8000-000000000001')->set('keyCode', 'bad')->call('revealKey')
+            ->assertHasErrors('keyCode')->set('keyCode', '000000')->call('revealKey')->assertHasNoErrors()
+            ->assertSet('showKeyModal', true)->assertSet('keyCode', '')->assertSee('El código es incorrecto, venció o ya fue utilizado.')
+            ->assertSet('keyChallengeId', '30000000-0000-4000-8000-000000000001');
+    }
+
+    public function test_key_lookup_requires_detail_permission_and_legacy_keys_have_no_reveal_button(): void
+    {
+        $this->permissions(['licbtn01']);
+        $this->fakeCustomers();
+        $this->fakeList(canRevealKey: false);
+        Livewire::test(Licenses::class)->call('selectCustomer', '20000000-0000-4000-8000-000000000001')
+            ->assertDontSee('Ver clave completa')->call('requestKeyCode', '10000000-0000-4000-8000-000000000001')->assertForbidden();
+        Livewire::test(Licenses::class)->call('revealKey')->assertForbidden();
+        Http::assertNotSent(fn ($request) => str_ends_with($request->url(), '/key-code') || str_ends_with($request->url(), '/reveal-key'));
+        $this->permissions(['licbtn01', 'licbtn04']);
+        Livewire::test(Licenses::class)->call('selectCustomer', '20000000-0000-4000-8000-000000000001')
+            ->assertDontSee('Ver clave completa')->assertSee('Clave anterior no recuperable');
+    }
+
+    public function test_no_license_is_created_before_authorization_and_changing_data_requires_a_new_code(): void
+    {
+        $this->permissions(['licbtn01', 'licbtn02']);
+        $this->fakeCustomers();
+        Http::fake(['api.example.test/api/config/licenses/generation-code' => Http::response([
+            'code' => 200, 'data' => ['challenge_id' => '30000000-0000-4000-8000-000000000001'],
+        ])]);
+        $this->fakeList();
+        $component = Livewire::test(Licenses::class)->call('create')->set('label', 'Caja principal')->call('save')
+            ->assertHasNoErrors()->assertSet('generatedKey', '')->assertSee('Autorizar y generar clave')
+            ->call('save')->assertHasErrors('generationCode')
+            ->set('generationCode', 'bad')->call('save')->assertHasErrors('generationCode')
+            ->set('generationCode', '123456')->set('seats', 3)->assertSet('generationChallengeId', '')->assertSet('generationCode', '')
+            ->call('save')->assertSet('generationChallengeId', '30000000-0000-4000-8000-000000000001');
+        Http::assertNotSent(fn ($request) => $request->method() === 'POST' && parse_url($request->url(), PHP_URL_PATH) === '/api/config/licenses');
+        $this->assertCount(2, Http::recorded(fn ($request) => str_ends_with($request->url(), '/generation-code')));
+        $component->set('showForm', false)->assertSet('generationChallengeId', '')->assertSet('generationCode', '');
+    }
+
+    public function test_generation_code_api_errors_preserve_form_and_clear_entered_code(): void
+    {
+        $this->permissions(['licbtn01', 'licbtn02']);
+        $this->fakeCustomers();
+        Http::fake([
+            'api.example.test/api/config/licenses/generation-code' => Http::sequence()
+                ->push(['code' => 200, 'data' => ['challenge_id' => '30000000-0000-4000-8000-000000000001']])
+                ->push(['code' => 429, 'message' => 'Espera un minuto antes de solicitar otro código.'], 429),
+            'api.example.test/api/config/licenses' => Http::response(['code' => 422, 'message' => 'El código es incorrecto o venció.'], 422),
+        ]);
+        Livewire::test(Licenses::class)->call('create')->set('label', 'Caja principal')->call('save')
+            ->set('generationCode', '000000')->call('save')->assertSet('generationCode', '')->assertSet('generatedKey', '')
+            ->assertSet('showForm', true)->assertSee('El código es incorrecto o venció.')
+            ->call('requestGenerationCode')->assertSet('generationChallengeId', '30000000-0000-4000-8000-000000000001')
+            ->assertSee('Espera un minuto antes de solicitar otro código.');
+    }
+
+    public function test_generation_code_request_and_confirmation_require_generate_permission(): void
+    {
+        $this->permissions(['licbtn01', 'licbtn04']);
+        $this->fakeCustomers();
+        Livewire::test(Licenses::class)->call('requestGenerationCode')->assertForbidden();
+        Livewire::test(Licenses::class)->call('save')->assertForbidden();
+        Http::assertNotSent(fn ($request) => $request->method() === 'POST');
+    }
+
     private function permissions(array $actions): void
     {
         session()->put('auth.api.spermisos', [['modulo_l' => ['codigo' => 'cfg'], 'vistas_l' => [[
@@ -210,12 +316,13 @@ class LicenseManagementTest extends TestCase
         ])]);
     }
 
-    private function fakeList(bool $canDelete = true): void
+    private function fakeList(bool $canDelete = true, bool $canRevealKey = true): void
     {
         Http::fake(['api.example.test/api/config/licenses*' => Http::response(['code' => 200, 'data' => [[
             'id' => '10000000-0000-4000-8000-000000000001', 'customer_id' => '20000000-0000-4000-8000-000000000001', 'customer_name' => 'DNDEV', 'label' => 'Synthetic license', 'product' => 'shpos',
             'term_months' => 12, 'key_suffix' => '12345678', 'seats' => 1, 'used_seats' => 0, 'enabled' => true, 'expires_at' => '2030-01-01 12:00:00',
             'can_delete' => $canDelete,
+            'can_reveal_key' => $canRevealKey,
         ]], 'meta' => ['current_page' => 1, 'last_page' => 1]])]);
     }
 }

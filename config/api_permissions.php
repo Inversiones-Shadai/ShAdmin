@@ -128,6 +128,11 @@ return [
                         'prmbtn12', 'prmbtn13', 'prmbtn14',
                     ],
                 ],
+                'acf' => [
+                    'label' => 'Configuración de aplicación', 'icon' => 'adjustments-horizontal',
+                    'route' => 'config.appconfig', 'route-pattern' => 'config.appconfig',
+                    'ability' => 'appconfig.list', 'actions' => ['acfbtn01', 'acfbtn02', 'acfbtn03'],
+                ],
                 'lic' => [
                     'label' => 'Licencias de escritorio', 'icon' => 'key',
                     'route' => 'config.licenses', 'route-pattern' => 'config.licenses',
@@ -285,6 +290,9 @@ return [
                         'prdbtn19',
                     ],
                 ],
+                'avt' => ['label' => 'Alertas de venta', 'icon' => 'exclamation-triangle',
+                    'route' => 'farma.alertas-venta', 'route-pattern' => 'farma.alertas-venta',
+                    'ability' => 'sale-alerts.list', 'group' => 'products', 'actions' => ['avtbtn01', 'avtbtn02']],
                 'vnc' => [
                     'label' => 'Próximos a vencer', 'icon' => 'clock',
                     'route' => 'farma.vencimientos', 'route-pattern' => 'farma.vencimientos',
@@ -313,7 +321,7 @@ return [
                     'route-pattern' => 'farma.distribucion',
                     'ability' => 'distribution.list',
                     'group' => 'products',
-                    'actions' => ['dstbtn01', 'dstbtn02', 'dstbtn03'],
+                    'actions' => ['dstbtn01', 'dstbtn02', 'dstbtn03', 'dstbtn04'],
                 ],
                 'tft' => [
                     'label' => 'Tipos de transferencia',
@@ -440,6 +448,11 @@ return [
                         'cmpbtn09',
                     ],
                 ],
+                'vpd' => [
+                    'label' => 'Ventas perdidas', 'icon' => 'chart-bar',
+                    'route' => 'farma.reportes.ventas-perdidas', 'route-pattern' => 'farma.reportes.ventas-perdidas',
+                    'ability' => 'lost-sales.list', 'group' => 'reports', 'actions' => ['vpdbtn01'],
+                ],
                 'rct' => [
                     'label' => 'Costeo de productos',
                     'icon' => 'chart-bar',
@@ -511,6 +524,7 @@ return [
     |
     */
     'abilities' => [
+        'lost-sales' => ['view' => ['frm', 'vpd'], 'list' => ['frm', 'vpd', 'vpdbtn01']],
         'cost-reports' => [
             'view' => ['frm', 'rct'],
             'list' => ['frm', 'rct', 'rctbtn01'],
@@ -525,6 +539,7 @@ return [
         ],
         'tasks' => ['list' => ['frm', 'tar', 'tarbtn01'], 'create' => ['frm', 'tar', 'tarbtn02'], 'show' => ['frm', 'tar', 'tarbtn03'],
             'update' => ['frm', 'tar', 'tarbtn04'], 'cancel' => ['frm', 'tar', 'tarbtn05'], 'filter' => ['frm', 'tar', 'tarbtn06']],
+        'sale-alerts' => ['view' => ['frm', 'avt'], 'list' => ['frm', 'avt', 'avtbtn01'], 'manage' => ['frm', 'avt', 'avtbtn02']],
         'inventory-matrix' => [
             'view' => ['frm', 'miv'], 'list' => ['frm', 'miv', 'mivbtn01'],
             'filter' => ['frm', 'miv', 'mivbtn02'],
@@ -638,6 +653,11 @@ return [
             'states' => ['cfg', 'stk', 'stkbtn06'],
         ],
 
+        'appconfig' => [
+            'list' => ['cfg', 'acf', 'acfbtn01'],
+            'create' => ['cfg', 'acf', 'acfbtn02'],
+            'update' => ['cfg', 'acf', 'acfbtn03'],
+        ],
         'licenses' => [
             'list' => ['cfg', 'lic', 'licbtn01'], 'generate' => ['cfg', 'lic', 'licbtn02'],
             'update' => ['cfg', 'lic', 'licbtn03'], 'detail' => ['cfg', 'lic', 'licbtn04'], 'unlink' => ['cfg', 'lic', 'licbtn05'],
@@ -799,6 +819,7 @@ return [
             'list' => ['frm', 'dst', 'dstbtn01'],
             'detail' => ['frm', 'dst', 'dstbtn02'],
             'save' => ['frm', 'dst', 'dstbtn03'],
+            'create-lot' => ['frm', 'dst', 'dstbtn04'],
         ],
 
         'transfer-types' => [

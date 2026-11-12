@@ -80,8 +80,10 @@ const viewer = {
             event.preventDefault();
             event.stopImmediatePropagation();
             this.activeSource = source;
-            loadSessionImage(source).then((url) => {
-                if (this.activeSource === source) this.show(name, url, true);
+            loadSessionImage(source, trigger.dataset.imageViewerFallbackSrc).then((url) => {
+                if (this.activeSource === source) {
+                    this.show(name, url, !trigger.hasAttribute('data-image-viewer-on-demand'));
+                }
             }).catch(() => {
                 if (this.activeSource === source) this.show(name, source, false);
             });

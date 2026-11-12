@@ -40,6 +40,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('api.permission:stocks.list')
         ->name('config.stocks');
     Route::view('config/licenses', 'config.licenses')->middleware('api.permission:licenses.list')->name('config.licenses');
+    Route::view('config/appconfig', 'config.app-config')
+        ->middleware('api.permission:appconfig.list')->name('config.appconfig');
     Route::view('config/desktop-releases', 'config.desktop-releases')->middleware('api.permission:desktop-releases.list')->name('config.desktop-releases');
     Route::view('config/devices', 'config.devices')
         ->middleware('api.permission:devices.list')
@@ -64,6 +66,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('farma/laboratorios', 'farma.laboratorios')
         ->middleware('api.permission:laboratories.list')
         ->name('farma.laboratorios');
+    Route::view('farma/alertas-venta', 'farma.alertas-venta')
+        ->middleware('api.permission:sale-alerts.list')->name('farma.alertas-venta');
     Route::view('farma/productos', 'farma.productos')
         ->middleware('api.permission:products.list')
         ->name('farma.productos');
@@ -97,6 +101,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('farma.reportes.compras');
     Route::view('farma/reportes/costeo', 'farma.reporte-costeo')
         ->middleware('api.permission:cost-reports.list')->name('farma.reportes.costeo');
+    Route::view('farma/reportes/ventas-perdidas', 'farma.ventas-perdidas')
+        ->middleware('api.permission:lost-sales.list')->name('farma.reportes.ventas-perdidas');
     Route::view('farma/compras/transacciones', 'farma.compra-transacciones')
         ->middleware('api.permission:purchase-transactions.list')
         ->name('farma.compras.transacciones');

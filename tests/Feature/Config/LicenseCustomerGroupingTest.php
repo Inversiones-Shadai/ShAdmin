@@ -82,7 +82,8 @@ class LicenseCustomerGroupingTest extends TestCase
         $this->permissions(['licbtn01', 'licbtn02']);
         $this->fakeApi();
         Livewire::test(Licenses::class)->call('selectCustomer', self::OTHER)->call('create')->assertSet('customerId', self::OTHER)
-            ->set('label', 'Other license')->call('save')->assertHasNoErrors()->assertSet('generatedKey', 'SHD-SYNTHETIC');
+            ->set('label', 'Other license')->call('save')->assertHasNoErrors()->assertSet('generatedKey', '')
+            ->set('generationCode', '123456')->call('save')->assertHasNoErrors()->assertSet('generatedKey', 'SHD-SYNTHETIC');
         Http::assertSent(fn ($request) => $request->method() === 'POST' && parse_url($request->url(), PHP_URL_PATH) === '/api/config/licenses'
             && $request['customer_id'] === self::OTHER);
     }
@@ -152,6 +153,9 @@ class LicenseCustomerGroupingTest extends TestCase
         Http::fake(['api.example.test/api/config/licenses*' => function ($request) use (&$customers, &$licenses) {
             $path = parse_url($request->url(), PHP_URL_PATH);
             parse_str((string) parse_url($request->url(), PHP_URL_QUERY), $query);
+            if ($path === '/api/config/licenses/generation-code') {
+                return Http::response(['code' => 200, 'data' => ['challenge_id' => '30000000-0000-4000-8000-000000000001']]);
+            }
             $page = max(1, (int) ($query['page'] ?? 1));
             if (str_starts_with($path, '/api/config/licenses/customers')) {
                 if ($request->method() === 'GET') {

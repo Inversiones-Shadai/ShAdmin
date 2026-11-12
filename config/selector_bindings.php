@@ -1,6 +1,16 @@
 <?php
 
 return [
+    \App\Livewire\Farma\VentasPerdidas::class => [
+        'lost-sale-products' => ['cache' => 'choices.products'],
+        'lost-sale-stocks' => ['cache' => 'choices.stocks'],
+        'lost-sale-users' => ['cache' => 'choices.users'],
+    ],
+    \App\Livewire\Farma\AlertasVenta::class => [
+        'sale-alert-products' => ['cache' => 'productChoice'],
+        'sale-alert-categories' => ['cache' => 'categoryChoice'],
+        'sale-alert-stocks' => ['cache' => 'stockChoice'],
+    ],
     'App\\Livewire\\Config\\Devices' => [
         'device-stocks' => [
             'cache' => 'stocks',
@@ -183,6 +193,7 @@ return [
         ],
     ],
     'App\\Livewire\\Farma\\Distribucion' => [
+        'distribution-products' => ['cache' => 'catalogProductChoices'],
         'distribution-stocks' => [
             'cache' => 'promotionStocks',
         ],
